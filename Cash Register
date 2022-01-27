@@ -1,0 +1,75 @@
+function checkCashRegister(price, cash, cid) {
+  let change = Math.round((cash - price)*100);
+  let newArr = [
+    ["PENNY", 0], 
+    ["NICKEL", 0], 
+    ["DIME", 0], 
+    ["QUARTER", 0], 
+    ["ONE", 0], 
+    ["FIVE", 0], 
+    ["TEN", 0], 
+    ["TWENTY", 0], 
+    ["ONE HUNDRED", 0]
+  ];
+  let result = {status: "", change: []};
+  let sum = cid.map(x => Math.round(x[1]*100)).reduce((x,y)=>x+y);
+  
+  if (change > sum){
+    result.status = "INSUFFICIENT_FUNDS";
+    return result;
+  }
+  else if (change === sum){
+    result.status = "CLOSED";
+    result.change = [...cid];
+    return result;
+  }
+  else{
+    
+    while(change > 0){
+      if(change >= 10000 && cid[8][1]/100 > newArr[8][1]/100){
+        newArr[8][1] += 100;
+        change -= 10000;
+        
+      }else if(change >= 2000 && cid[7][1]/20 > newArr[7][1]/20){
+        newArr[7][1] += 20;
+        change -= 2000;
+       
+      }else if(change >= 1000 && cid[6][1]/10 > newArr[6][1]/10){
+        newArr[6][1] += 10;
+        change -= 1000;
+       
+        
+      }else if(change >= 500 && cid[5][1]/5 > newArr[5][1]/5){
+        newArr[5][1] += 5;
+        change -= 500;
+       
+      }else if(change >= 100 && cid[4][1]/1 > newArr[4][1]/1){
+        newArr[4][1] += 1;
+        change -= 100;
+       
+      }else if(change >= 25 && cid[3][1]/.25 > newArr[3][1]/.25){
+        newArr[3][1] += .25;
+        change -= 25;
+        
+      }else if(change >= 10 && cid[2][1]/.1 > newArr[2][1]/.1){
+        newArr[2][1] += .1;
+        change -= 10;
+      
+      }else if(change >= 5 && cid[1][1]/.05 > newArr[1][1]/.05){
+        newArr[1][1] += .05;
+        change -= 5;
+       
+      }else if (change >= 1 && cid[0][1]/.01> newArr[0][1]/.01){
+        newArr[0][1] += .01;
+        change -= 1;
+        
+      }else{
+        result.status = "INSUFFICIENT_FUNDS";
+        return result;
+      }
+    }
+    result.status = "OPEN";
+    result.change = newArr.reverse().filter(x => x[1] > 0);
+    return result;
+  }
+}
